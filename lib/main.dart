@@ -4,6 +4,9 @@ import 'package:nike_project/signup_details/signup_details.dart';
 import 'package:nike_project/signup_in/signup_in.dart';
 import 'package:nike_project/signupsuccess/signupsuccess.dart';
 import 'package:nike_project/splash_screen2/splash_screen2.dart';
+import 'package:nike_project/view/nike_splash11/nike_splash11.dart';
+import 'package:nike_project/view/nike_splash22/nike_splash22.dart';
+import 'package:nike_project/view/nike_splash44/nike_splash44.dart';
 import 'package:nike_project/view/sign_inscreen/sign_inscreen.dart';
 import 'package:nike_project/view/signup_screen/signup_screen.dart';
 
@@ -36,7 +39,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Signinscreen()
+      home: NikeSplash11(),
     );
   }
 }
