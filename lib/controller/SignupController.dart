@@ -6,7 +6,6 @@ class SignupController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Registers user with email only and a temporary password.
   Future<void> registerWithEmailOnly({
     required String email,
     required BuildContext context,
@@ -18,9 +17,11 @@ class SignupController {
         password: tempPassword,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email registered successfully')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Signup Successful!')),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       String errorMsg;
       if (e.code == 'email-already-in-use') {
@@ -37,7 +38,6 @@ class SignupController {
     }
   }
 
-  /// Completes the profile by setting password and storing user details in Firestore.
   Future<void> updatePasswordAndCompleteProfile({
     required String password,
     required String code,
@@ -48,34 +48,42 @@ class SignupController {
   }) async {
     try {
       final user = _auth.currentUser;
+      print("🔥 Current user: $user");
 
       if (user != null) {
-        // Update password
         await user.updatePassword(password);
         await user.reload();
 
-        // Store user profile in Firestore
+        print("✅ Password updated. Saving user data...");
+
         await _firestore.collection("users").doc(user.uid).set({
+          "uid": user.uid,
           "email": user.email,
           "firstName": firstName,
           "surname": surname,
           "code": code,
           "dateOfBirth": dob,
+          "password": password, // 🔐 Optional: don't store plaintext in production
           "createdAt": FieldValue.serverTimestamp(),
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Signup complete!")),
-        );
+        print("✅ User data written to Firestore.");
 
-        // Navigate to initial screen (home, dashboard, etc.)
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Signup complete!")),
+          );
+        }
+
         Navigator.of(context).popUntil((route) => route.isFirst);
       } else {
+        print("❌ No user found.");
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("No user found. Please log in again.")),
         );
       }
     } catch (e) {
+      print("❌ Firestore error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: ${e.toString()}")),
       );

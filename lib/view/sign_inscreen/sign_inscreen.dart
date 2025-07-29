@@ -2,22 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:nike_project/Utilits/constants/colorConstants.dart';
 import 'package:nike_project/Utilits/constants/image_constants.dart';
 import 'package:nike_project/Utilits/constants/text_constants.dart';
+import 'package:nike_project/controller/SigninController.dart';
 import 'package:nike_project/controller/SignupController.dart';
 import 'package:nike_project/signup_details/signup_details.dart';
 
 import 'package:nike_project/widgets/two_symbol.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class Signinscreen extends StatefulWidget {
+  const Signinscreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<Signinscreen> createState() => _SigninscreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SigninscreenState extends State<Signinscreen> {
+  final _signinController = SigninController();
+
+
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final SignupController _signupController = SignupController();
+  
 
   String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -127,22 +131,15 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   const Spacer(),
                   InkWell(
-                  onTap: () async {
+                 onTap: () async {
   if (_formKey.currentState!.validate()) {
-    await _signupController.registerWithEmailOnly(
+     await _signinController.loginWithEmail(
       email: _emailController.text.trim(),
       context: context,
     );
-
-  
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => SignupDetails(email: _emailController.text.trim()),
-      ),
-    );
   }
 },
+
 
 
                     child: custombutton(),

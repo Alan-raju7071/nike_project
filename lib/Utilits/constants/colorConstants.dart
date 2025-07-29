@@ -7,5 +7,8 @@ class Colorconstants {
    static const Color transparent=  Colors.transparent;
    static const Color black54=   Colors.black54;
    static const Color black87=Colors.black87;
+   static const Color black=Colors.black;
+   static const Color grey700=Color.fromARGB(255, 169, 167, 167);
+   static const Color greyash= Color(0xFF7C7C7C);
                   
 }

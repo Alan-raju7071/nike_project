@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:nike_project/Utilits/constants/colorConstants.dart';
+import 'package:nike_project/Utilits/constants/text_constants.dart';
 import 'package:nike_project/controller/SignupController.dart';
 import 'package:nike_project/widgets/two_symbol.dart';
 
@@ -54,10 +56,17 @@ class _SignupDetailsState extends State<SignupDetails> {
     super.dispose();
   }
 
-  void _submitForm() async {
+ void _submitForm() async {
   if (_formKey.currentState!.validate()) {
     final dob =
         '${_dayController.text.padLeft(2, '0')}/${_monthController.text.padLeft(2, '0')}/${_yearController.text}';
+
+    print("📝 Submitting...");
+    print("📦 Code: ${_codeController.text}");
+    print("📦 First Name: ${_firstNameController.text}");
+    print("📦 Surname: ${_surnameController.text}");
+    print("📦 DOB: $dob");
+    print("📦 Password: ${_passwordController.text}");
 
     await _signupController.updatePasswordAndCompleteProfile(
       password: _passwordController.text.trim(),
@@ -69,6 +78,8 @@ class _SignupDetailsState extends State<SignupDetails> {
     );
   }
 }
+
+
 
 
 
@@ -85,47 +96,48 @@ class _SignupDetailsState extends State<SignupDetails> {
               const two_symbol(),
               const SizedBox(height: 40),
               const Text(
-                "Now let’s make you a Nike \nMember.",
+                TextConstants.nowlets,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 20),
-              const Text("We’ve sent a code to"),
+              const Text(TextConstants.wev),
               Text(widget.email,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
+                  style: const TextStyle(fontSize: 14)),
               const SizedBox(height: 20),
 
-              // Code field with refresh
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _codeController,
-                      decoration: InputDecoration(
-                        hintText: 'Code*',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Enter the code';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: _resendTimer == 0 ? () => print('Resend') : null,
-                    icon: const Icon(Icons.refresh),
-                  ),
-                  Text(
-                    _resendTimer > 0 ? 'Resend code in ${_resendTimer}s' : 'Resend',
-                    style: TextStyle(color: Colors.grey[700]),
-                  ),
-                ],
-              ),
+              
+             TextFormField(
+               controller: _codeController,
+               decoration: InputDecoration(
+                 hintText: 'Code*',
+                 border: OutlineInputBorder(),
+                 suffixIcon: IconButton(
+                   icon: const Icon(Icons.refresh),
+                   onPressed: _resendTimer == 0 ? () => print('Resend') : null,
+                 ),
+               ),
+               keyboardType: TextInputType.number,
+               validator: (value) {
+                 if (value == null || value.isEmpty) {
+                   return 'Enter the code';
+                 }
+                 return null;
+               },
+             ),
+             const SizedBox(width: 8),
+             Row(
+               children: [
+                Spacer(),
+                 Text(
+                   _resendTimer > 0 ? 'Resend code in ${_resendTimer}s' : 'Resend',
+                   style: TextStyle(color: Colorconstants.grey700),
+                 ),
+               ],
+             ),
+
               const SizedBox(height: 20),
 
-              // First name and surname
+              
               Row(
                 children: [
                   Expanded(
@@ -155,7 +167,7 @@ class _SignupDetailsState extends State<SignupDetails> {
               ),
               const SizedBox(height: 20),
 
-              // Password field
+              
               TextFormField(
                 controller: _passwordController,
                 obscureText: _obscurePassword,
@@ -185,11 +197,11 @@ class _SignupDetailsState extends State<SignupDetails> {
                 },
               ),
               const SizedBox(height: 10),
-              const Text('x Minimum of 8 characters'),
-              const Text('X Uppercase, lowercase letters and one number'),
+              const Text(TextConstants.min8),
+              const Text(TextConstants.xuppre),
               const SizedBox(height: 20),
 
-              const Text('Date of Birth', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(TextConstants.dob, style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -249,12 +261,12 @@ class _SignupDetailsState extends State<SignupDetails> {
                 ],
               ),
               const SizedBox(height: 10),
-              const Text("Get a Nike Member Reward on your birthday."),
+              const Text(TextConstants.gethike),
               const SizedBox(height: 30),
 
               ElevatedButton(
                 onPressed: _submitForm,
-                child: const Text("Continue"),
+                child: const Text(TextConstants.conti),
               )
             ],
           ),
