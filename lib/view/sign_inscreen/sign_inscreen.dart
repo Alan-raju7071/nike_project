@@ -21,24 +21,16 @@ class _SigninscreenState extends State<Signinscreen> {
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Email is required';
-    }
-
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-    if (!emailRegex.hasMatch(value.trim())) {
-      return 'Enter a valid email';
-    }
-
-    return null;
-  }
+  
 
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -49,124 +41,178 @@ class _SigninscreenState extends State<Signinscreen> {
         padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 89),
-              const two_symbol(),
-              const SizedBox(height: 40),
-              Text(
-                TextConstants.enteremail,
-                style: const TextStyle(
-                    fontSize: 24, fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Text(
-                    TextConstants.ind,
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    TextConstants.chan,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      decoration: TextDecoration.underline,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 89),
+                const two_symbol(),
+                const SizedBox(height: 40),
+                Text(
+                  "Sign in with email",
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Maecenas a quam a elit porta hendrerit \nid elementum massa.",
+                  style: const TextStyle(fontSize: 14),
+                ),
+                const SizedBox(width: 10),
+                const SizedBox(height: 20),
+            
+            Material(
+              elevation: 2,
+              borderRadius: BorderRadius.circular(12),
+              child: StatefulBuilder(
+                builder: (context, setState) {
+                  return TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    onChanged: (_) => setState(() {}),
+                    validator: (value) {
+            final emailPattern = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+            if (value == null || value.trim().isEmpty) {
+              return 'Please enter your email';
+            } else if (!emailPattern.hasMatch(value.trim())) {
+              return 'Enter a valid email address';
+            }
+            return null;
+                    },
+                    decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(vertical: 18),
+            prefixIcon: const Icon(Icons.mail_outline, color: Colors.black87),
+            suffixIcon: RegExp(r'^[^@]+@[^@]+\.[^@]+$')
+                    .hasMatch(_emailController.text.trim())
+                ? const Icon(Icons.check_circle, color: Colors.green)
+                : null,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red, width: 1.5),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red, width: 1.5),
+            ),
+             hintText: 'Email',
+            isDense: true,
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
-              const SizedBox(height: 20),
-
-              TextFormField(
-                controller: _emailController,
-                validator: _validateEmail,
-                keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 20),
+            
+            Material(
+              elevation: 2,
+              borderRadius: BorderRadius.circular(12),
+              child: TextFormField(
+                controller: _passwordController,
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Please enter your password';
+                  } else if (value.length < 6) {
+                    return 'Password must be at least 6 characters';
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
-                  hintText: 'Email*',
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 18),
+                  prefixIcon: const Icon(Icons.lock_outline, color: Colors.black87),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
                   ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.red, width: 1.5),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.red, width: 1.5),
+                  ),
+                  hintText: 'Password',
+                  isDense: true,
                 ),
               ),
-
-              const SizedBox(height: 20),
-              RichText(
-                textAlign: TextAlign.start,
-                text: const TextSpan(
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colorconstants.black87,
-                    height: 1.5,
-                  ),
+            ),
+            
+            
+            
+                const SizedBox(height: 20),
+                
+            
+                Row(
                   children: [
-                    TextSpan(text: TextConstants.bycont),
-                    TextSpan(
-                      text: TextConstants.pri,
-                      style: TextStyle(
-                        fontSize: 14,
-                        decoration: TextDecoration.underline,
-                        color: Colorconstants.black,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    TextSpan(text: ' \nand '),
-                    TextSpan(
-                      text: TextConstants.ter,
-                      style: TextStyle(
-                        fontSize: 14,
-                        decoration: TextDecoration.underline,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                      ),
+                    const Spacer(),
+                    InkWell(
+                   onTap: () async {
+              if (_formKey.currentState!.validate()) {
+                 await _signinController.loginWithEmail(
+                  email: _emailController.text.trim(),
+                   password: _passwordController.text.trim(),
+                  context: context,
+                );
+              }
+            },
+            
+            
+            
+                      child: custombutton(),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 20),
+                const SizedBox(height: 44),
+                Row(
+                  children: const [
+                    Expanded(child: Divider(height: 1.03)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.5),
+                      child: Text("or continue", style: TextStyle(fontSize: 14)),
+                    ),
+                    Expanded(child: Divider(height: 1.03)),
+                  ],
+                ),
+                const SizedBox(height: 57),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _socialIcon(ImageConstants.google),
+                    _socialIcon(ImageConstants.faceb),
+                    _socialIcon(ImageConstants.apple),
+                  ],
+                ),
+                SizedBox(height: 60,),
+                Text("Nam id elementum risus. Lorem ipsum dolor sit amet, \nconsectetur adipiscing elit. Integer luctus enim non \nsapien ullamcorper congue. "),
+                SizedBox(height: 94,)
+              ],
 
-              Row(
-                children: [
-                  const Spacer(),
-                  InkWell(
-                 onTap: () async {
-  if (_formKey.currentState!.validate()) {
-     await _signinController.loginWithEmail(
-      email: _emailController.text.trim(),
-      context: context,
-    );
-  }
-},
-
-
-
-                    child: custombutton(),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 44),
-              Row(
-                children: const [
-                  Expanded(child: Divider(height: 1.03)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.5),
-                    child: Text(TextConstants.or, style: TextStyle(fontSize: 14)),
-                  ),
-                  Expanded(child: Divider(height: 1.03)),
-                ],
-              ),
-              const SizedBox(height: 57),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _socialIcon(ImageConstants.google),
-                  _socialIcon(ImageConstants.faceb),
-                  _socialIcon(ImageConstants.apple),
-                ],
-              ),
-            ],
+            ),
           ),
         ),
       ),

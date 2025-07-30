@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nike_project/Utilits/constants/colorConstants.dart';
 import 'package:nike_project/Utilits/constants/image_constants.dart';
 import 'package:nike_project/Utilits/constants/text_constants.dart';
+import 'package:nike_project/view/sign_inscreen/sign_inscreen.dart';
 import 'package:nike_project/view/signup_screen/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -89,33 +90,34 @@ class _LoginScreenState extends State<LoginScreen> {
                    Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen()));
-                        },
-                        child: GestureDetector(
+                       GestureDetector(
                           onTap: () {
                             setState(() {
                               isSignUpSelected = true;
                             });
                           },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: isSignUpSelected ? Colorconstants.white : Colorconstants.transparent,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colorconstants.white),
-                            ),
-                            child: Text(
-                              TextConstants.sigup,
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: isSignUpSelected ?  Colorconstants.primaryblue : Colorconstants.white,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen(),));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: isSignUpSelected ? Colorconstants.white : Colorconstants.transparent,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colorconstants.white),
+                              ),
+                              child: Text(
+                                TextConstants.sigup,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: isSignUpSelected ?  Colorconstants.primaryblue : Colorconstants.white,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                      
                       const SizedBox(width: 8),
                       GestureDetector(
                         onTap: () {
@@ -123,18 +125,23 @@ class _LoginScreenState extends State<LoginScreen> {
                             isSignUpSelected = false;
                           });
                         },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: !isSignUpSelected ? Colorconstants.white : Colorconstants.transparent,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colorconstants.white),
-                          ),
-                          child: Text(
-                            TextConstants.sigin,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: !isSignUpSelected ? Colorconstants.primaryblue : Colorconstants.white,
+                        child: InkWell(
+                           onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Signinscreen()));
+                            },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: !isSignUpSelected ? Colorconstants.white : Colorconstants.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colorconstants.white),
+                            ),
+                            child: Text(
+                              TextConstants.sigin,
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: !isSignUpSelected ? Colorconstants.primaryblue : Colorconstants.white,
+                              ),
                             ),
                           ),
                         ),
