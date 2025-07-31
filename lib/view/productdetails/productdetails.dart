@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:nike_project/controller/cart_controller.dart';
+import 'package:nike_project/models/cart_data.dart';
+import 'package:nike_project/view/bagscreen/bagscreen.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({super.key});
+  final String image;
+  final String name;
+  final String category;
+  final String price;
+  const ProductDetailsScreen({super.key,
+  required this.image,
+    required this.name,
+    required this.category,
+    required this.price,
+  });
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -12,21 +25,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int selectedImageIndex = 0;
 
   final List<int> sizes = [6, 7, 8, 9, 10, 11];
-  final List<String> images = [
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6reCUlYEZJugx6iVaIpzmILqrQq-ssGbXBw&s',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6reCUlYEZJugx6iVaIpzmILqrQq-ssGbXBw&s',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6reCUlYEZJugx6iVaIpzmILqrQq-ssGbXBw&s',
-  ];
 
   @override
   Widget build(BuildContext context) {
+    final List<String> images = [
+      widget.image,
+      widget.image,
+      widget.image,
+    ];
+
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: const BackButton(color: Colors.black),
-        title: const Text(
-          'Nike SB Dunk Low Pro',
-          style: TextStyle(fontSize: 16, color: Colors.black),
+        title: Text(
+          widget.name,
+          style: const TextStyle(fontSize: 16, color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -42,7 +55,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Product Carousel
+              // Carousel
               SizedBox(
                 height: 220,
                 child: Stack(
@@ -84,26 +97,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Product Info
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  "Nike SB Dunk  Low Pro",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
+                child: Text(widget.name,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 18)),
               ),
               const SizedBox(height: 4),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
-                child: Text("Skate Shoes", style: TextStyle(fontSize: 14)),
+                child: Text(widget.category,
+                    style: const TextStyle(fontSize: 14)),
               ),
               const SizedBox(height: 6),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  "MRP: ₹ 23,795.00",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
+                child: Text("MRP: ${widget.price}",
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 6),
               const Align(
@@ -114,6 +125,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
               ),
               const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
               // Size Selection
               const Align(
@@ -151,54 +163,91 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   },
                 ),
               ),
-              const SizedBox(height: 80), // Leave space for bottom bar
+              const SizedBox(height: 80),
+              Row(
+            children: [
+              // Add to Bag
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+  Provider.of<CartProvider>(context, listen: false).addItem(
+              CartItem(
+                image: widget.image,
+                name: widget.name,
+                category: widget.category,
+                price: double.tryParse(widget.price.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0,
+              ),
+            );
+
+  // Add to global cart if needed
+
+
+  // Navigate to BagScreen with current item(s)
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Bagscreens()
+    ),
+  );
+},
+
+                
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    alignment: Alignment.center,
+                    child: const Text(
+                      "Add to Bag",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              // Buy Now
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    alignment: Alignment.center,
+                    child: const Text(
+                      "Buy Now",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ), // Leave space for bottom bar
             ],
           ),
         ),
       ),
 
       /// Bottom Buttons
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: Colors.grey, width: 0.2)),
-          color: Colors.white,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                onPressed: () {
-                  // TODO: Add to bag logic
-                },
-                child: const Text("Add to Bag"),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  side: const BorderSide(color: Colors.black),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                onPressed: () {
-                  // TODO: Buy now logic
-                },
-                child: const Text("Buy Now"),
-              ),
-            ),
-          ],
-        ),
-      ),
+      
+      
+      
+          
     );
   }
 }
+

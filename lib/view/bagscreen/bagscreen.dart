@@ -1,170 +1,174 @@
 import 'package:flutter/material.dart';
+import 'package:nike_project/controller/cart_controller.dart';
+import 'package:provider/provider.dart';
+import 'package:nike_project/models/cart_data.dart';
 
-class BagScreen extends StatelessWidget {
-  const BagScreen({super.key});
+
+class Bagscreens extends StatelessWidget {
+  const Bagscreens({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cart = Provider.of<CartProvider>(context);
+
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Bag", style: TextStyle(color: Colors.black)),
+        title: const Text("My Bag"),
         backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
+        foregroundColor: Colors.black,
+        elevation: 1,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Product Card
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade300,
-                    blurRadius: 6,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Product Image
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQIt0W_sTXtiftYPVfCIBc2Gvr_BtrU-WIuw&s',
-                      width: 90,
-                      height: 90,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  // Product Details
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          "Nike Alphafly 3 Premium",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 4),
-                        Text("Men’s Road Racing Shoes"),
-                        SizedBox(height: 4),
-                        Text(
-                          "White/Black/University Red\n6 (EU 40)",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Qty and Price
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: const [
-                    Text("Qty", style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(width: 8),
-                    Icon(Icons.arrow_drop_down),
-                  ],
-                ),
-                const Text(
-                  "MRP: ₹ 23,795.00",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-            const Align(
-              alignment: Alignment.centerRight,
+      body: cart.items.isEmpty
+          ? const Center(
               child: Text(
-                "Incl. of all taxes\n(Also includes all applicable duties)",
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-                textAlign: TextAlign.right,
+                "Your bag is empty",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
-            ),
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: cart.items.length,
+                    itemBuilder: (context, index) {
+                      final item = cart.items[index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 6,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                item.image,
+                                width: 90,
+                                height: 90,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.name,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    item.category,
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "₹${(item.price * item.quantity).toStringAsFixed(2)}",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.deepPurple,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          cart.decrementQuantity(index);
+                                        },
+                                        icon: const Icon(Icons.remove),
+                                      ),
+                                      
+                                      Text(
+                                        item.quantity.toString(),
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          cart.incrementQuantity(index);
+                                        },
+                                        icon: const Icon(Icons.add),
+                                      ),
+                                       IconButton(
+      onPressed: () {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Remove Item"),
+      content: const Text("Are you sure you want to remove this item?"),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("Cancel"),
+        ),
+        TextButton(
+          onPressed: () {
+            cart.removeItem(index);
+            Navigator.pop(context);
+          },
+          child: const Text("Remove", style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    ),
+  );
+},
 
-            const SizedBox(height: 20),
-
-            // Price Breakdown
-            Column(
-              children: const [
-                PriceRow(label: "Subtotal", value: "₹ 23,795.00"),
-                PriceRow(label: "Delivery", value: "₹ 1,250.00"),
-                Divider(height: 24),
-                PriceRow(
-                  label: "Total",
-                  value: "₹ 25,045.00",
-                  isBold: true,
+      icon: const Icon(Icons.delete_outline, color: Colors.red),
+    ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: const BoxDecoration(
+                    border: Border(top: BorderSide(color: Colors.grey, width: 0.2)),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Total:",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "₹${cart.totalPrice.toStringAsFixed(2)}",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-
-            const Spacer(),
-
-            // Checkout Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text("Checkout", style: TextStyle(fontSize: 16)),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class PriceRow extends StatelessWidget {
-  final String label;
-  final String value;
-  final bool isBold;
-
-  const PriceRow({
-    required this.label,
-    required this.value,
-    this.isBold = false,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final textStyle = isBold
-        ? const TextStyle(fontWeight: FontWeight.bold)
-        : const TextStyle(color: Colors.black);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: textStyle),
-          Text(value, style: textStyle),
-        ],
-      ),
     );
   }
 }

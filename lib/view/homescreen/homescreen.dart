@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nike_project/view/productdetails/productdetails.dart';
 
 
 class Homescreen extends StatefulWidget {
@@ -167,50 +168,60 @@ SizedBox(
         separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           final product = products[index];
-          return Container(
-            width: 160,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.grey.shade100,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(12)),
-                      child: Image.network(
-                        product['image']!,
-                        height: 120,
-                        width: 160,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Icon(Icons.favorite_border, color: Colors.white),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          return InkWell(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailsScreen(
+          image: product['image']!,
+          name: product['name']!,
+          category: product['category']!,
+          price: product['price']!,
+        ),));
+            },
+            child: Container(
+              width: 160,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.grey.shade100,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
                     children: [
-                      Text(product['name']!,
-                          style:
-                              const TextStyle(fontWeight: FontWeight.bold)),
-                      Text(product['category']!,
-                          style: const TextStyle(color: Colors.grey)),
-                      const SizedBox(height: 4),
-                      Text('MRP : ${product['price']}'),
+                      ClipRRect(
+                        borderRadius:
+                            const BorderRadius.vertical(top: Radius.circular(12)),
+                        child: Image.network(
+                          product['image']!,
+                          height: 120,
+                          width: 160,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Icon(Icons.favorite_border, color: Colors.white),
+                      ),
                     ],
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(product['name']!,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(product['category']!,
+                            style: const TextStyle(color: Colors.grey)),
+                        const SizedBox(height: 4),
+                        Text('MRP : ${product['price']}'),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         },

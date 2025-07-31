@@ -19,7 +19,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
     Homescreen(),
     ShopScreen(),
     FavouriteScreen(), // Wishlist
-    BagScreen(),
+    Bagscreens(),
     ProfileScreen(), // Profile
   ];
 
